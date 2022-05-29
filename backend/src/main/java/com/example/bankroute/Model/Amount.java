@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class Loan {
+public class Amount {
     private float amount;
-    private float taxes;
-    private float delay;
 }

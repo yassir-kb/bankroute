@@ -1,0 +1,37 @@
+Client : 
+- Il faut pas afficher account.
+- Supprime le return en POST et PUT et DELETE.
+- Cas d'exceptions.
+- POST => validated.
+- Date et heure.
+- Les conditions pour un client identiques :
+	- nom
+	- prenom
+	- dob
+	- civility
+- number to phone.
+- number prb.
+- deux personnes identiques s'ils ont les meme ...
+- separer les deux fonctions (validated, accounts)
+- annotation pour cacher une variable null dans spring.
+- uri pour history/iban
+
+{
+      "civility": "monsieur",
+      "fname": "Yasser",
+      "nname": "SuperDooper",
+      "lname": "KB",
+      "dob": "14-02-2001",
+      "resources": 1000,
+      "charges": 900,
+      "mail": "yassir.elkobi@bnpparibas.com",
+      "number": 1
+}
+
+{
+	"accType" : ["checkingAcc", "savingsAcc"] 
+}
+
+{
+	"amount" : 5
+}
