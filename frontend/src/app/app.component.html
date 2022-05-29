@@ -1,0 +1,595 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="color:white;">BankRoute Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+            aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Client <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" (click)="onOpenModal(null, 'account')">Client Accounts<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" (click)="onOpenModal(null, 'history')">History of Operations<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" (click)="onOpenModal(null, 'loan')">Loan Apply<span
+                        class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input type="search" (ngModelChange)="searchClients(key.value)" #key="ngModel" ngModel
+                   name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search clients..." required>
+        </form>
+    </div>
+</nav>
+<div class="container" id="main-container">
+    <div class="row">
+        <div *ngFor="let client of clients" class="col-md-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body row">
+                    <div class="col-6 card-title align-self-center mb-0">
+                        <a class="acceuil"
+                           (click)="onOpenModal(client, 'consultclient')">{{client?.lname}} {{client?.fname}}</a>
+                        <!--<h5>{{client?.lname}} {{client?.fname}}</h5>-->
+                        <p class="m-0">{{client?.dob}}</p>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fa fa-envelope float-right"></i>Mail : {{client?.mail}}</li>
+                    <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{client?.number}}</li>
+                    <li class="list-group-item"><i class="fa fa-phone float-right"></i>Status : {{client?.status}}</li>
+                </ul>
+                <div class="card-body">
+                    <div class="float-right btn-group btn-group-sm">
+                        <a (click)="onOpenModal(client, 'accept')" class="btn btn-primary tooltips"
+                           data-placement="top" data-original-title="Accept"><i class="fa fa-check-circle"
+                                                                                aria-hidden="true"></i></a>
+                        <a (click)="onOpenModal(client, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                           data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a (click)="onOpenModal(client, 'delete')" class="btn btn-secondary tooltips"
+                           data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClientModalLabel">Add Client</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #addForm="ngForm" (ngSubmit)="onAddClient(addForm)">
+                        <div class="form-group">
+                            <label for="civility">Civility :</label>
+                            <input type="text" ngModel name="civility" class="form-control" id="civility"
+                                   placeholder="civility"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fname">First Name :</label>
+                            <input type="text" ngModel name="fname" class="form-control" id="fname" placeholder="fname"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nname">Nick Name :</label>
+                            <input type="text" ngModel name="nname" class="form-control" id="nname"
+                                   placeholder="Nick Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lname">Last Name :</label>
+                            <input type="text" ngModel name="lname" class="form-control" id="lname"
+                                   placeholder="Last Name"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth :</label>
+                            <input type="text" ngModel name="dob" class="form-control" id="dob"
+                                   placeholder="Date of Birth"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resources">Resources :</label>
+                            <input type="text" ngModel name="resources" class="form-control" id="resources"
+                                   placeholder="Resources"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="charges">Charges :</label>
+                            <input type="text" ngModel name="charges" class="form-control" id="charges"
+                                   placeholder="Charges" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mail">Mail :</label>
+                            <input type="text" ngModel name="mail" class="form-control" id="mail"
+                                   placeholder="mail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Number :</label>
+                            <input type="text" ngModel name="number" class="form-control" id="number"
+                                   placeholder="Number" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="add-client-form" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="updateClientModal" tabindex="-1" role="dialog"
+         aria-labelledby="clientEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateClientModalLabel">Edit
+                        Client {{editClient?.lname}} {{editClient?.fname}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #editForm="ngForm">
+                        <div class="form-group">
+                            <label for="id">ID</label>
+                            <input type="text" ngModel="{{editClient?.id}}" name="id" class="form-control"
+                                   id="id" aria-describedby="id" placeholder="ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="civility">Civility :</label>
+                            <input type="text" ngModel="{{editClient?.civility}}" name="civility" class="form-control"
+                                   id="civilityedit" aria-describedby="civility" placeholder="Civility">
+                        </div>
+                        <div class="form-group">
+                            <label for="fname">First Name :</label>
+                            <input type="text" ngModel="{{editClient?.fname}}" name="fname" class="form-control"
+                                   id="fnameedit" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="nname">Nick Name :</label>
+                            <input type="text" ngModel="{{editClient?.nname}}" name="nname" class="form-control"
+                                   id="nnameedit" placeholder="Nick Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lname">Last Name :</label>
+                            <input type="text" ngModel="{{editClient?.lname}}" name="lname" class="form-control"
+                                   id="lnameedit" name="lname" placeholder="Last Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth :</label>
+                            <input type="text" ngModel="{{editClient?.dob}}" name="dob" class="form-control"
+                                   id="dobedit" placeholder="Date of Birth">
+                        </div>
+                        <div class="form-group">
+                            <label for="resources">Resources :</label>
+                            <input type="text" ngModel="{{editClient?.resources}}" name="resources" class="form-control"
+                                   id="resourcesedit" placeholder="Resources">
+                        </div>
+                        <div class="form-group">
+                            <label for="charges">Charges :</label>
+                            <input type="text" ngModel="{{editClient?.charges}}" name="charges" class="form-control"
+                                   id="chargesedit" placeholder="Charges">
+                        </div>
+                        <div class="form-group">
+                            <label for="mail">Mail :</label>
+                            <input type="text" ngModel="{{editClient?.mail}}" name="mail" class="form-control"
+                                   id="mailedit" placeholder="Mail">
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Number :</label>
+                            <input type="text" ngModel="{{editClient?.number}}" name="number" class="form-control"
+                                   id="numberedit" placeholder="Number">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                            <button (click)="onUpdateClient(editForm.value)" data-dismiss="modal"
+                                    class="btn btn-primary">Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Delete Client</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete client {{deleteClient?.lname}} {{deleteClient?.fname}}?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button (click)="onDeleteClient(deleteClient?.id)" class="btn btn-danger"
+                                data-dismiss="modal">Yes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Accept Modal -->
+    <div class="modal fade" id="acceptClientModal" tabindex="-1" role="dialog" aria-labelledby="acceptClientModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="acceptClientModalLabel">Edit
+                            Client {{acceptClient?.lname}} {{acceptClient?.fname}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #acceptForm="ngForm">
+                            <div class="form-group">
+                                <label for="accType">Account Type :</label>
+                                <input type="text" [(ngModel)]="stringAccountType" name="toto" class="form-control"
+                                       id="accType" placeholder="Account Type">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button (click)="onAcceptClient(acceptClient?.id ,acceptForm.value)"
+                                        class="btn btn-danger"
+                                        data-dismiss="modal">Yes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consult Modal -->
+    <div class="modal fade" id="consultClientModal" tabindex="-1" role="dialog" aria-labelledby="acceptClientModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="consultClientModalLabel">Consult
+                            Client {{consultClient?.lname}} {{consultClient?.fname}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #consultForm="ngForm">
+                            <div class="form-group">
+                                <label for="id">Client ID :</label>
+                                <input type="text" ngModel="{{consultClient?.id}}" name="id" class="form-control"
+                                       id="idconsult" aria-describedby="id" placeholder="ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="civility">Civility :</label>
+                                <input type="text" ngModel="{{consultClient?.civility}}" name="civility"
+                                       class="form-control"
+                                       id="civilityconsult" aria-describedby="civility" placeholder="Civility">
+                            </div>
+                            <div class="form-group">
+                                <label for="fname">First Name :</label>
+                                <input type="text" ngModel="{{consultClient?.fname}}" name="fname"
+                                       class="form-control"
+                                       id="fnameconsult" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="nname">Nick Name :</label>
+                                <input type="text" ngModel="{{consultClient?.nname}}" name="nname"
+                                       class="form-control"
+                                       id="nnameconsult" placeholder="Nick Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lname">Last Name :</label>
+                                <input type="text" ngModel="{{consultClient?.lname}}" name="lname"
+                                       class="form-control"
+                                       id="lnameconsult" name="lname" placeholder="Last Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth :</label>
+                                <input type="text" ngModel="{{consultClient?.dob}}" name="dob" class="form-control"
+                                       id="dobconsult" placeholder="Date of Birth">
+                            </div>
+                            <div class="form-group">
+                                <label for="resources">Resources :</label>
+                                <input type="text" ngModel="{{consultClient?.resources}}" name="resources"
+                                       class="form-control"
+                                       id="resourcesconsult" placeholder="Resources">
+                            </div>
+                            <div class="form-group">
+                                <label for="charges">Charges :</label>
+                                <input type="text" ngModel="{{consultClient?.charges}}" name="charges"
+                                       class="form-control"
+                                       id="chargesconsult" placeholder="Charges">
+                            </div>
+                            <div class="form-group">
+                                <label for="mail">Mail :</label>
+                                <input type="text" ngModel="{{consultClient?.mail}}" name="mail"
+                                       class="form-control"
+                                       id="mailconsult" placeholder="Mail">
+                            </div>
+                            <div class="form-group">
+                                <label for="number">Number :</label>
+                                <input type="text" ngModel="{{consultClient?.number}}" name="number"
+                                       class="form-control"
+                                       id="numberconsult" placeholder="Number">
+                            </div>
+                            <div class="form-group">
+                                <label for="statusconsult">Status :</label>
+                                <input type="text" ngModel="{{consultClient?.status}}" name="status"
+                                       class="form-control"
+                                       id="statusconsult" placeholder="Status">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button (click)="onOpenModal(consultClient, 'consultaccounts')"
+                                        class="btn btn-danger"
+                                        data-dismiss="modal">Check Accounts
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Consult Account Modal-->
+    <div class="modal fade" id="consultAccountsModal" tabindex="-1" role="dialog" aria-labelledby="consultAccountsModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="consultAccountsModalLabel">Consult
+                            Accounts of {{consultClient?.lname}} {{consultClient?.fname}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" *ngFor="let acc of accounts">
+                        <div class="form-group">
+                            <label for="id">Account ID :</label>
+                            <input type="text" ngModel="{{acc?.id}}" name="id"
+                                   class="form-control"
+                                   id="idaccount" placeholder="ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="accountstype">Account Type :</label>
+                            <input type="text" ngModel="{{acc?.accType}}" name="accountstype"
+                                   class="form-control"
+                                   id="accountstype" placeholder="Account Type">
+                        </div>
+                        <div class="form-group">
+                            <label for="balance">Balance :</label>
+                            <input type="text" ngModel="{{acc?.balance}}" name="balance"
+                                   class="form-control"
+                                   id="balance" placeholder="Balance">
+                        </div>
+                        <div class="form-group">
+                            <label for="iban">Iban :</label>
+                            <input type="text" ngModel="{{acc?.iban}}" name="iban"
+                                   class="form-control"
+                                   id="iban" placeholder="Iban">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Consult Account by ID-->
+    <div class="modal fade" id="getAccountsModal" tabindex="-1" role="dialog" aria-labelledby="acceptClientModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="getAccountsModalLabel"> Consult Accounts</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #getAccountstForm="ngForm">
+                            <div class="form-group">
+                                <label for="accType">Client ID :</label>
+                                <input type="text" ngModel name="id" class="form-control"
+                                       id="idclient" placeholder="ID">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button (click)="onOpenModal(getAccountstForm.value, 'consultaccounts')"
+                                        class="btn btn-danger"
+                                        data-dismiss="modal">Yes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Consult History by ID-->
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="HistoryModalLabel"> Consult History of Operations</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #historyForm="ngForm">
+                            <div class="form-group">
+                                <label for="accType">Client ID</label>
+                                <input type="text" [(ngModel)]="stringAccountType" name="id" class="form-control"
+                                       id="idclienthistory" placeholder="ID">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button (click)="onOpenModal(historyForm.value, 'consulthistory')"
+                                        class="btn btn-danger"
+                                        data-dismiss="modal">Yes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Apply for loan-->
+    <div class="modal fade" id="loanModal" tabindex="-1" role="dialog" aria-labelledby="loanModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loanModalLabel"> Apply loan !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #loanForm="ngForm" (ngSubmit)="onLoan(loanForm)">
+                            <div class="form-group">
+                                <label for="idclientloan">Client ID :</label>
+                                <input type="text" ngModel name="idclientloan" class="form-control"
+                                       id="idclientloan" placeholder="ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="ibanloan">Iban :</label>
+                                <input type="text" ngModel name="ibanloan" class="form-control"
+                                       id="ibanloan" placeholder="Iban">
+                            </div>
+                            <div class="form-group">
+                                <label for="amountloan">The amount :</label>
+                                <input type="text" ngModel name="amountloan" class="form-control"
+                                       id="amountloan" placeholder="Amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="taxes">Taxes :</label>
+                                <input type="text" ngModel name="taxes" class="form-control"
+                                       id="taxes" placeholder="taxes">
+                            </div>
+                            <div class="form-group">
+                                <label for="delay">Delay :</label>
+                                <input type="text" ngModel name="delay" class="form-control"
+                                       id="delay" placeholder="Delay">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="loan-client-form" class="btn btn-secondary"
+                                        data-dismiss="modal">Close
+                                </button>
+                                <button [disabled]="loanForm.invalid" type="submit" class="btn btn-primary">Validate
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Consult History Modal-->
+    <div class="modal fade" id="consultHistoryModal" tabindex="-1" role="dialog" aria-labelledby="consultHistoryModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="consultHistoryModalLabel">Consult
+                            Operations History of {{client?.lname}} {{client?.fname}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" *ngFor="let histroy of histories">
+                        <!--#consultAccountsModal="ngForm"-->
+                        <div class="form-group">
+                            <label for="id">Transaction ID :</label>
+                            <input type="text" ngModel="{{histroy?.id}}" name="id"
+                                   class="form-control"
+                                   id="historyid" placeholder="ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="accountstype">Account Type :</label>
+                            <input type="text" ngModel="{{histroy?.accType}}" name="accountstype"
+                                   class="form-control"
+                                   id="historytype" placeholder="Account Type">
+                        </div>
+                        <div class="form-group">
+                            <label for="balance">Balance :</label>
+                            <input type="text" ngModel="{{histroy?.amount}}" name="balance"
+                                   class="form-control"
+                                   id="amount" placeholder="Balance">
+                        </div>
+                        <div class="form-group">
+                            <label for="iban">Iban :</label>
+                            <input type="text" ngModel="{{histroy?.iban}}" name="iban"
+                                   class="form-control"
+                                   id="ibanhistory" placeholder="Iban">
+                        </div>
+                        <div class="form-group">
+                            <label for="locatedhistory">Time :</label>
+                            <input type="text" ngModel="{{histroy?.located}}" name="locatedhistory"
+                                   class="form-control"
+                                   id="locatedhistory" placeholder="Time">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification for no clients -->
+    <div *ngIf="clients?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">NO Clients!</h4>
+            <p>No Clients were found.</p>
+        </div>
+    </div>
+</div>
